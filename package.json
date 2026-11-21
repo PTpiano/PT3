@@ -6,7 +6,7 @@
     "dev": "next dev",
     "dev:web": "npm --prefix web run dev",
     "build": "npm run build:web && next build",
-    "build:web": "npm --prefix web ci && npm --prefix web run build && node scripts/copy-web.mjs",
+    "build:web": "npm --prefix web ci --include=dev && npm --prefix web run build && node scripts/copy-web.mjs",
     "start": "next start",
     "lint": "next lint",
     "db:init": "node scripts/init-db.mjs"
