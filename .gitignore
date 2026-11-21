@@ -1,0 +1,14 @@
+/node_modules
+/web/node_modules
+.next/
+.vercel/
+.data/
+public/uploads/
+public/index.html
+web/node_modules/
+web/dist/
+.env*
+!.env.example
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
