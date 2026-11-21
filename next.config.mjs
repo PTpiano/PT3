@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // PGlite (solo sviluppo locale) usa WASM e dipendenze opzionali che
+  // Turbopack non riesce a risolvere: resta esterno al bundle server.
+  // In produzione DATABASE_URL è sempre impostata, quindi non viene caricato.
+  serverExternalPackages: ["@electric-sql/pglite"],
   images: {
     remotePatterns: [
       // Immagini legacy ancora puntate dai dati esistenti (galleria/album):
