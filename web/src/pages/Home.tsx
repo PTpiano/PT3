@@ -3,7 +3,6 @@ import { gsap, ScrollTrigger, MaskText, Reveal, TLink, introFlag, setMood, prefe
 import { useSite, fmtTime, fmtMoney } from "@/store/store";
 import { usePlayer } from "@/audio/PlayerContext";
 import { Img, Btn, SmokeDivider, Stave, fmtDate } from "@/components/ui";
-import KeysScrub from "@/components/KeysScrub";
 
 /* ───────────────────────────── HERO ───────────────────────────── */
 function Hero() {
@@ -560,12 +559,10 @@ function Finale() {
 }
 
 export default function Home() {
-  const { data } = useSite();
   return (
     <>
       <Hero />
       <Manifesto />
-      <KeysScrub {...data.content.keys} />
       <Chapters />
       <Setlist />
       <Marquee />
