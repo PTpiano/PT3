@@ -1,7 +1,8 @@
 /**
  * Layer storage unificato.
  *
- * - Produzione (Vercel): Vercel Blob con BLOB_READ_WRITE_TOKEN.
+ * - Produzione (Vercel): Vercel Blob con BLOB_READ_WRITE_TOKEN oppure
+ *   autenticazione OIDC (BLOB_STORE_ID + VERCEL_OIDC_TOKEN).
  * - Sviluppo locale: file salvati in public/uploads/ e serviti da Next.
  *
  * API: uploadFile(path, data, contentType) → URL pubblico
@@ -15,7 +16,10 @@ const LOCAL_DIR = path.join(process.cwd(), "public", "uploads");
 const EXTERNAL_URL_RE = /^https?:\/\//i;
 
 function hasBlobToken(): boolean {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  return Boolean(
+    process.env.BLOB_READ_WRITE_TOKEN ||
+      (process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN)
+  );
 }
 
 function sanitizePath(p: string): string {
