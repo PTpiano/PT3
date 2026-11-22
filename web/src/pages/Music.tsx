@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { setMood, Reveal, MaskText } from "@/motion";
+import { setMood, Reveal, MaskText, getLenis, prefersReduced } from "@/motion";
 import { usePlayer } from "@/audio/PlayerContext";
 import { useSite, fmtTime } from "@/store/store";
 import type { Product, Track } from "@/store/data";
@@ -80,6 +80,7 @@ export default function Music() {
       return null;
     }
   });
+  const playerRef = useRef<HTMLElement>(null);
   const selected = releases.find((product) => product.id === selectedId) ?? releases[0] ?? null;
   const selectedTrackIds = useMemo(() => (selected ? releaseTrackIds(selected, data.tracks) : null), [data.tracks, selected]);
 
@@ -92,11 +93,26 @@ export default function Music() {
     }
   };
 
+  /** Riporta il visitatore al giradischi e alla tracklist dell'album scelto. */
+  const scrollToPlayer = () => {
+    const target = playerRef.current;
+    if (!target) return;
+    // -100: lascia la copertina del giradischi sotto la nav fissa.
+    if (prefersReduced()) {
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 100, behavior: "auto" });
+      return;
+    }
+    const lenis = getLenis();
+    if (lenis) lenis.scrollTo(target, { offset: -100, duration: 1.1 });
+    else window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 100, behavior: "smooth" });
+  };
+
   const selectRelease = (release: Product) => {
     setSelectedId(release.id);
     rememberRelease(release.id);
     // Aggiorna subito player e sfondo quando viene selezionata la copertina.
     p.setTracklist(releaseTrackIds(release, data.tracks));
+    scrollToPlayer();
   };
 
   useEffect(() => setMood("copper"), []);
@@ -117,7 +133,7 @@ export default function Music() {
     <>
       <PageHero kicker="Sala d'ascolto" title={"La musica,\ndal vivo"} sub="Premi play: i brani senza traccia caricata suonano come improvvisazioni generate in tempo reale al pianoforte — un assaggio della sala, finché non carichi i master dal pannello admin." />
 
-      <section className="relative isolate px-6 md:px-14 pb-24 grid lg:grid-cols-12 gap-12 lg:gap-16">
+      <section ref={playerRef} className="relative isolate px-6 md:px-14 pb-24 grid lg:grid-cols-12 gap-12 lg:gap-16">
         {selected && (
           <div
             className="pointer-events-none absolute inset-0 -z-10"
