@@ -12,8 +12,26 @@ import { atmo } from "@/motion";
 let ctx: AudioContext | null = null;
 let master: GainNode;
 let analyser: AnalyserNode;
+let wet: GainNode;
 let localEl: HTMLAudioElement | null = null; // connected to analyser (blob:/data:)
 let remoteEl: HTMLAudioElement | null = null; // plain element (cross-origin safe)
+
+/** Mix del reverbero: attivo solo a player fermo o in pausa. */
+const REVERB_WET = 0.42;
+let reverbOn = true;
+
+/**
+ * Apre/chiude il reverbero. Il player fermo o in pausa lascia suonare
+ * la coda; in riproduzione il segnale resta dry.
+ */
+function setReverb(on: boolean) {
+  reverbOn = on;
+  if (!ctx || !wet) return;
+  const t = ctx.currentTime;
+  wet.gain.cancelScheduledValues(t);
+  wet.gain.setValueAtTime(wet.gain.value, t);
+  wet.gain.linearRampToValueAtTime(on ? REVERB_WET : 0, t + 0.08);
+}
 
 function impulse(c: AudioContext, seconds: number, decay: number) {
   const len = c.sampleRate * seconds;
@@ -39,8 +57,8 @@ function ensureCtx() {
   dry.gain.value = 0.8;
   const rev = ctx.createConvolver();
   rev.buffer = impulse(ctx, 3.2, 2.6);
-  const wet = ctx.createGain();
-  wet.gain.value = 0.42;
+  wet = ctx.createGain();
+  wet.gain.value = reverbOn ? REVERB_WET : 0;
   const warm = ctx.createBiquadFilter();
   warm.type = "lowpass";
   warm.frequency.value = 5200;
@@ -361,6 +379,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     if (master) master.gain.value = v;
     if (remoteEl) remoteEl.volume = v;
   }, []);
+
+  // Il reverbero suona solo quando il player è fermo o in pausa:
+  // in riproduzione il segnale resta dry.
+  useEffect(() => {
+    setReverb(!playing);
+  }, [playing]);
 
   // progress ticker
   useEffect(() => {
