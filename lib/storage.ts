@@ -1,8 +1,9 @@
 /**
  * Layer storage unificato.
  *
- * - Produzione (Vercel): Vercel Blob con BLOB_READ_WRITE_TOKEN oppure
- *   autenticazione OIDC (BLOB_STORE_ID + VERCEL_OIDC_TOKEN).
+ * - Produzione (Vercel): Vercel Blob. Le credenziali sono risolte
+ *   dall'SDK: token statico (BLOB_READ_WRITE_TOKEN) oppure OIDC
+ *   (BLOB_STORE_ID + token fornito dalla runtime Vercel).
  * - Sviluppo locale: file salvati in public/uploads/ e serviti da Next.
  *
  * API: uploadFile(path, data, contentType) → URL pubblico
@@ -15,11 +16,12 @@ import path from "node:path";
 const LOCAL_DIR = path.join(process.cwd(), "public", "uploads");
 const EXTERNAL_URL_RE = /^https?:\/\//i;
 
-function hasBlobToken(): boolean {
-  return Boolean(
-    process.env.BLOB_READ_WRITE_TOKEN ||
-      (process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN)
-  );
+/**
+ * Vercel Blob è configurato se c'è un token statico oppure se è collegato
+ * uno store (l'SDK recupera da solo il token OIDC dalla runtime).
+ */
+function hasBlobConfig(): boolean {
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 }
 
 function sanitizePath(p: string): string {
@@ -47,7 +49,7 @@ export async function uploadFile(
   const clean = sanitizePath(pathName);
   const buffer = await toBuffer(data);
 
-  if (hasBlobToken()) {
+  if (hasBlobConfig()) {
     const { put } = await import("@vercel/blob");
     const blob = await put(clean, buffer, {
       access: "public",
@@ -72,7 +74,7 @@ export async function uploadFile(
 export async function deleteFileByUrl(url: string): Promise<void> {
   if (!url || EXTERNAL_URL_RE.test(url)) return;
 
-  if (hasBlobToken() && url.includes("blob.vercel-storage.com")) {
+  if (hasBlobConfig() && url.includes("blob.vercel-storage.com")) {
     try {
       const pathname = new URL(url).pathname.replace(/^\/+/, "");
       const { del } = await import("@vercel/blob");
@@ -107,7 +109,7 @@ export interface StorageFile {
 export async function listFiles(prefix: string): Promise<StorageFile[]> {
   const clean = sanitizePath(prefix).replace(/\/+$/, "");
 
-  if (hasBlobToken()) {
+  if (hasBlobConfig()) {
     const { list } = await import("@vercel/blob");
     const { blobs } = await list({ prefix: clean + "/" });
     return blobs.map((b) => ({
