@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
-/* Lignis — font display principale (hero e titoli) */
+/* Signesha — font display principale (hero e titoli) */
 @font-face {
-  font-family: "Lignis";
-  src: url("/fonts/Lignis-Regular.otf") format("opentype");
+  font-family: "Signesha";
+  src: url("/fonts/Signesha.woff2") format("woff2"),
+       url("/fonts/Signesha.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -21,7 +22,7 @@
   --color-oxide: var(--accent-3, #f3d9a4);
   --color-forest: #12302a;
   --color-indigo-night: #1b1d4d;
-  --font-display: "Lignis", "Fraunces", "Cormorant Garamond", Georgia, serif;
+  --font-display: "Signesha", "Fraunces", "Cormorant Garamond", Georgia, serif;
   --font-sans: "Manrope", system-ui, sans-serif;
   --font-mono: "DM Mono", ui-monospace, monospace;
   --font-hand: "Caveat", cursive;
@@ -59,7 +60,7 @@ body.has-cursor, body.has-cursor a, body.has-cursor button, body.has-cursor [dat
 ::-webkit-scrollbar-track { background: #0a0705; }
 ::-webkit-scrollbar-thumb { background: #3a2616; border-radius: 8px; }
 
-/* Lignis è un font statico: niente assi variabili né corsivi sintetici.
+/* Signesha è un font statico: niente assi variabili né corsivi sintetici.
    L'enfasi (display-it) resta nella stessa famiglia: un solo peso disponibile. */
 .font-display { font-variation-settings: normal; font-weight: 400; font-synthesis: none; }
 .display-it { font-family: var(--font-display); font-style: normal; font-weight: 400; font-variation-settings: normal; font-synthesis: none; }
