@@ -1,11 +1,32 @@
 @import "tailwindcss";
 
-/* Pemusiran — font display principale (hero e titoli) */
+/* Departura — font display principale (hero e titoli) */
 @font-face {
-  font-family: "Pemusiran";
-  src: url("/fonts/Pemusiran-Regular.ttf") format("truetype");
+  font-family: "Departura";
+  src: url("/fonts/Departura-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Departura";
+  src: url("/fonts/Departura-Italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Departura";
+  src: url("/fonts/Departura-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Departura";
+  src: url("/fonts/Departura-BoldItalic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
   font-display: swap;
 }
 
@@ -21,7 +42,7 @@
   --color-oxide: var(--accent-3, #f3d9a4);
   --color-forest: #12302a;
   --color-indigo-night: #1b1d4d;
-  --font-display: "Pemusiran", "Fraunces", "Cormorant Garamond", Georgia, serif;
+  --font-display: "Departura", "Fraunces", "Cormorant Garamond", Georgia, serif;
   --font-sans: "Manrope", system-ui, sans-serif;
   --font-mono: "DM Mono", ui-monospace, monospace;
   --font-hand: "Caveat", cursive;
@@ -59,10 +80,10 @@ body.has-cursor, body.has-cursor a, body.has-cursor button, body.has-cursor [dat
 ::-webkit-scrollbar-track { background: #0a0705; }
 ::-webkit-scrollbar-thumb { background: #3a2616; border-radius: 8px; }
 
-/* Pemusiran è un font statico: niente assi variabili né corsivi sintetici.
-   L'enfasi (display-it) resta nella stessa famiglia: un solo peso disponibile. */
+/* Departura ha quattro stili reali (Regular/Italic/Bold/BoldItalic):
+   niente assi variabili né sintesi. L'enfasi (display-it) usa il corsivo vero. */
 .font-display { font-variation-settings: normal; font-weight: 400; font-synthesis: none; }
-.display-it { font-family: var(--font-display); font-style: normal; font-weight: 400; font-variation-settings: normal; font-synthesis: none; }
+.display-it { font-family: var(--font-display); font-style: italic; font-weight: 400; font-variation-settings: normal; font-synthesis: none; }
 
 /* breathing typography — almost imperceptible vibration */
 @keyframes breathe {
