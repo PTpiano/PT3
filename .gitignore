@@ -4,6 +4,7 @@
 .vercel/
 .data/
 public/uploads/
+public/fonts/
 public/index.html
 web/node_modules/
 web/dist/

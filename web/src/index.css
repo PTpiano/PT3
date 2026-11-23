@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+/* NORTHWEST — font display principale (hero e titoli) */
+@font-face {
+  font-family: "Northwest";
+  src: url("/fonts/NORTHWEST-Rough.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Northwest";
+  src: url("/fonts/NORTHWEST-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-ink: #0a0705;
   --color-ink-2: #120c08;
@@ -12,7 +28,7 @@
   --color-oxide: var(--accent-3, #f3d9a4);
   --color-forest: #12302a;
   --color-indigo-night: #1b1d4d;
-  --font-display: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  --font-display: "Northwest", "Fraunces", "Cormorant Garamond", Georgia, serif;
   --font-sans: "Manrope", system-ui, sans-serif;
   --font-mono: "DM Mono", ui-monospace, monospace;
   --font-hand: "Caveat", cursive;
@@ -50,8 +66,10 @@ body.has-cursor, body.has-cursor a, body.has-cursor button, body.has-cursor [dat
 ::-webkit-scrollbar-track { background: #0a0705; }
 ::-webkit-scrollbar-thumb { background: #3a2616; border-radius: 8px; }
 
-.font-display { font-variation-settings: "opsz" 144, "SOFT" 40, "WONK" 1; font-weight: 300; }
-.display-it { font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+/* NORTHWEST è un font statico: niente assi variabili né corsivi sintetici.
+   L'enfasi in corsivo (display-it) usa il peso Bold della stessa famiglia. */
+.font-display { font-variation-settings: normal; font-weight: 400; font-synthesis: none; }
+.display-it { font-family: var(--font-display); font-style: normal; font-weight: 700; font-variation-settings: normal; font-synthesis: none; }
 
 /* breathing typography — almost imperceptible vibration */
 @keyframes breathe {
